@@ -8,6 +8,31 @@ This repository contains a .NET 8 WebAPI project that demonstrates the integrati
 - **Docker Integration**: Runs in a Docker container.
 - **Local DynamoDB Instance**: Utilizes a local DynamoDB instance for development.
 
+
+## Prerequisites
+
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) - if building/running the project locally.
+- [Docker Desktop](https://www.docker.com/products/docker-desktop)
+
+## Getting Started
+
+Clone the repository to your local machine and start the application:
+
+```bash
+git clone https://github.com/psprateek7/PhocasAssetApi.git
+cd PhocasAssetApi/PhocasAsset
+docker-compose up --build
+```
+
+Access the application at
+`http://localhost:8080`
+
+Run unit tests
+```bash
+cd ../PhocasAssetApi/PhocasAsset.Tests
+dotnet test
+```
+
 ## API Endpoints
 
 Each endpoint's function and required query parameters are described below:
@@ -26,30 +51,3 @@ Retrieves events associated with a specific asset and trip.
 
 ### `GET /getLatestEvents`
 Retrieves the latest events for all assets. This endpoint does not require any query parameters.
-
-## Parameter Details
-- **Asset** and **Trip** parameters should be non-negative integers.
-- **StartDateTime** and **EndDateTime** should be valid ISO 8601 date strings.
-- **Limit** should be between 1 and 1000, inclusive.
-
-
-## Prerequisites
-
-- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) - if building/running the project locally.
-- [Docker Desktop](https://www.docker.com/products/docker-desktop)
-
-## Getting Started
-
-Clone the repository to your local machine and start the application:
-
-```bash
-git clone https://github.com/psprateek7/PhocasAssetApi.git
-cd PhocasAssetApi/PhocasAsset
-docker-compose up --build
-```
-
-Run unit tests
-```bash
-cd ../PhocasAssetApi/PhocasAsset.Tests
-dotnet test
-```
