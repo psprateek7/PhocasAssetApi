@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+ dynamodb-local:
+   command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+   image: "amazon/dynamodb-local:latest"
+   container_name: dynamodb-local
+   ports:
+     - "8000:8000"
+   volumes:
+     - "./docker/dynamodb:/home/dynamodblocal/data"
+   working_dir: /home/dynamodblocal
+ phocasapp:
+    build: .
+    container_name: phocasAsset
+    ports:
+      - "8080:8080" 
+    depends_on:
+      - dynamodb-local
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - AwsDynamo__AccessKey=dummy
+      - AwsDynamo__SecretKey=dummy
+      - AwsDynamo__ServiceUrl=http://dynamodb-local:8000
