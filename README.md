@@ -40,7 +40,7 @@ Retrieves the latest events for all assets. This endpoint does not require any q
 
 ## Getting Started
 
-Clone the repository to your local machine:
+Clone the repository to your local machine and start the application:
 
 ```bash
 git clone https://github.com/psprateek7/PhocasAssetApi.git
