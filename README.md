@@ -46,8 +46,10 @@ Clone the repository to your local machine:
 git clone https://github.com/psprateek7/PhocasAssetApi.git
 cd PhocasAssetApi/PhocasAsset
 docker-compose up --build
+```
 
-Run unit Test
+Run unit tests
 ```bash
 cd ../PhocasAssetApi/PhocasAsset.Tests
 dotnet test
+```
