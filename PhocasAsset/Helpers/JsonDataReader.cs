@@ -9,7 +9,6 @@ public static class JsonDataReader
         ValidateFilePath(filePath);
         try
         {
-            var i = 1;
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true
@@ -24,10 +23,9 @@ public static class JsonDataReader
                     var dataPoint = JsonSerializer.Deserialize<AssetTracking>(line, options);
                     if (dataPoint != null)
                     {
-                        dataPoint.SortKey = $"{dataPoint.CreatedAt}#{dataPoint.Trip}";
-                        var identifier = $"{dataPoint.Asset}_{dataPoint.CreatedAt}#{dataPoint.Trip}";
-                        dataPoint.Id = DataEncoder.Encode(identifier);
-                        dataPoint.TripIdCreatedAt = $"{dataPoint.Trip}#{dataPoint.CreatedAt}";
+                        dataPoint.SetSortKey();
+                        dataPoint.GenerateIdentifier();
+                        dataPoint.SetTripIdCreatedAt();
                         dataPoints.Add(dataPoint);
                         CheckAndUpdateLatestEvent(latestEvents, dataPoint);
                     }
@@ -45,6 +43,7 @@ public static class JsonDataReader
 
         return (dataPoints, latestEvents);
     }
+
     private static void ValidateFilePath(string filePath)
     {
         //application should exit if there is no valid data to operate on.
