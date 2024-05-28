@@ -11,4 +11,6 @@ public static class Constants
         public const string LatestGSI = "LatestGSI";
         public const string LatestGsiHashKey = "Latest";
     }
+
+    public const int DefaultLimit = 50;
 }

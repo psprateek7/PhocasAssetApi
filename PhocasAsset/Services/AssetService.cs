@@ -27,6 +27,17 @@ public class AssetService : IAssetService
     public async Task<List<AssetDto>> GetEventByAssetAndTimeRange(AssetTimeRangeParam param)
     {
         RequestValidator.Validate(param);
+
+        var (startDate, endDate) = DateUtilities.ParseDateTimes(param.StartDateTime, param.EndDateTime);
+        if (!DateUtilities.IsValidDateRange(startDate, endDate))
+        {
+            throw new HttpException(HttpStatusCode.BadRequest, $"Invalid Date range. End Date can not be before the Start Date");
+        }
+        if (!DateUtilities.IsDateRangeWithMinimumSpan(startDate, endDate))
+        {
+            throw new HttpException(HttpStatusCode.BadRequest, "The difference between the start and end dates cannot be more than 2 days.");
+        }
+
         var events = await _dataAccess.GetEventsByAssetAndTimeRange(param.Asset, param.StartDateTime, param.EndDateTime);
         if (events is null || events.Count == 0)
         {
@@ -37,9 +48,11 @@ public class AssetService : IAssetService
 
     public async Task<PaginatedResponse<AssetDto>> GetPagedEventByAssetAndTimeRange(AssetTimeRangeWithLimitParam param, string nextToken)
     {
-        var effectiveLimit = param.Limit ?? 25;
+        var effectiveLimit = param.Limit ?? Constants.DefaultLimit;
         RequestValidator.Validate(param);
-        if (!DateUtilities.IsValidDateRange(param.StartDateTime, param.EndDateTime))
+
+        var (startDate, endDate) = DateUtilities.ParseDateTimes(param.StartDateTime, param.EndDateTime);
+        if (!DateUtilities.IsValidDateRange(startDate, endDate))
         {
             throw new HttpException(HttpStatusCode.BadRequest, $"Invalid Date range. End Date can not be before the Start Date");
         }
