@@ -2,7 +2,6 @@ public static class EndpointsExtension
 {
     public static void MapEndpoints(this WebApplication app)
     {
-        app.MapGet("/getEventById", async (string id, IAssetService assetService) => await assetService.GetEventById(id));
 
         app.MapGet("/getEventByAssetAndTimeRange", async ([AsParameters] AssetTimeRangeParam queryParam, IAssetService assetService) =>
         {
@@ -29,6 +28,8 @@ public static class EndpointsExtension
         {
             return await assetService.GetLatestEvents();
         }).WithDescription("Get all the latest events across Assets");
+
+        app.MapGet("/getEventById", async (string id, IAssetService assetService) => await assetService.GetEventById(id));
 
     }
 }
