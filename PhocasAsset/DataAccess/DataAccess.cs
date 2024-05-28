@@ -34,6 +34,7 @@ public class DataAccess : IDataAccess
         var tableResponse = await _client.ListTablesAsync();
         if (!tableResponse.TableNames.Contains(Constants.DBConstants.TableName))
         {
+            _logger.LogDebug("Creating new table");
             var request = GetTableCreationRequest();
             await _client.CreateTableAsync(request);
             tableState = TableState.Created;
