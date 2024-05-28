@@ -129,6 +129,7 @@ public class DataAccess : IDataAccess
             _logger.LogDebug("----------------------------------------------------------------------------");
             _logger.LogDebug("------------------------------SEEDING DATA----------------------------------");
             _logger.LogDebug("------This might take a while before application is up and running----------");
+            _logger.LogDebug("-----------------------This is a one time step------------------------------");
             _logger.LogDebug("----------------------------------------------------------------------------");
             _logger.LogDebug("----------------------------------------------------------------------------");
 

@@ -10,8 +10,8 @@ public static class AssetExtensions
         assetTracking.TripIdCreatedAt = $"{assetTracking.Trip}#{assetTracking.CreatedAt}";
     }
 
-    public static string GenerateIdentifier(this AssetTracking assetTracking)
+    public static void GenerateIdentifier(this AssetTracking assetTracking)
     {
-        return DataEncoder.Encode($"{assetTracking.Asset}_{assetTracking.CreatedAt}#{assetTracking.Trip}");
+        assetTracking.Id = DataEncoder.Encode($"{assetTracking.Asset}_{assetTracking.CreatedAt}#{assetTracking.Trip}");
     }
 }
