@@ -1,31 +1,28 @@
 public class DbInitializerService : IHostedService
 {
     private readonly IDataAccess _dataAccess;
+    private readonly ILogger<DataAccess> _logger;
 
-    public DbInitializerService(IDataAccess dataAccess)
+    public DbInitializerService(IDataAccess dataAccess, ILogger<DataAccess> logger)
     {
         _dataAccess = dataAccess;
+        _logger = logger;
     }
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         try
         {
-            Console.WriteLine("StartAsync Prateeeek");
+            _logger.LogDebug("Checking Table Status");
             var tableState = await _dataAccess.CreateTableIfNotExistAsync().ConfigureAwait(false);
-            Console.WriteLine("tableState");
-            Console.WriteLine(tableState);
             if (tableState == TableState.Created)
             {
                 await _dataAccess.SeedDataAsync().ConfigureAwait(false);
-                Console.WriteLine("End Prateeeek");
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine("Exception Prateeeek");
-            Console.Error.WriteLine($"An error occurred while seeding the database: {ex.Message}");
-            // Consider handling the exception, e.g., by logging or stopping the application.
+            _logger.LogCritical($"An error occurred while seeding the database: {ex.Message}");
             throw;
         }
     }

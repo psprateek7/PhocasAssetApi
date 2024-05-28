@@ -29,18 +29,16 @@ public class DataAccess : IDataAccess
 
     public async Task<TableState> CreateTableIfNotExistAsync()
     {
-        Console.WriteLine("CreateTableIfNotExistAsync");
         TableState tableState = TableState.AlreadyExist;
         // Create an AssetTracking table if it doesn't exist
         var tableResponse = await _client.ListTablesAsync();
         if (!tableResponse.TableNames.Contains(Constants.DBConstants.TableName))
         {
-            Console.WriteLine("Creating");
             var request = GetTableCreationRequest();
             await _client.CreateTableAsync(request);
             tableState = TableState.Created;
         }
-        Console.WriteLine("Created");
+
         // Wait for table to become available
         bool isTableAvailable;
         do
@@ -52,7 +50,8 @@ public class DataAccess : IDataAccess
                 Thread.Sleep(5000);
             }
         } while (!isTableAvailable);
-        Console.WriteLine("return CreateTableIfNotExistAsync");
+
+        _logger.LogDebug("Table created");
         return tableState;
     }
 
@@ -137,10 +136,9 @@ public class DataAccess : IDataAccess
             var (dataPoints, latestEvents) = await JsonDataReader.ReadJsonFileAsync(_logger, filePath);
             if (dataPoints != null)
             {
-                /*Ideally the write operation  await ProcessAllBatchesAsync(dataPoints) could be perfomed in parallely in smaller batches
+                /*Ideally the write operation could be perfomed in parallely in smaller batches(ProcessAllBatchesAsync())
                   but the local dynamo setup is unable to handle the required insertion rate 
-                  and SDK is throwing exception after around 80% data is sent across
-                  hence relying on single batch request */
+                  and AWSSDK is throwing exception after around 80% data is sent across.*/
 
                 var batchWrite = _context.CreateBatchWrite<AssetTracking>();
                 batchWrite.AddPutItems(dataPoints);
@@ -203,7 +201,7 @@ public class DataAccess : IDataAccess
         {
             var batchWrite = _context.CreateBatchWrite<AssetTracking>();
             batchWrite.AddPutItems(itemBatch);
-            // Ideal to retry with exponential backoff
+            // Todo retry with exponential backoff
             await batchWrite.ExecuteAsync();
         }
         catch (Exception)
